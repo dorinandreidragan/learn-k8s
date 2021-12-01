@@ -57,12 +57,12 @@ Cluster Network Ports
 
 - Control Plane Node Ports
 
-  | Component          | Ports (tcp) | Used By       |
+  | Component          | Ports (tcp) | Used By       |      |
   | ------------------ | ----------- | ------------- | ---- |
-  | API                | 6443        | All           |
-  | etcd               | 2379-2380   | API/etcd      |
-  | Scheduler          | 10251       | Self          |
-  | Controller Manager | 10252       | Self          |
+  | API                | 6443        | All           |      |
+  | etcd               | 2379-2380   | API/etcd      |      |
+  | Scheduler          | 10251       | Self          |      |
+  | Controller Manager | 10252       | Self          |      |
   | Kubelet            | 10250       | Control Plane | Self |
 
 - Node Ports
