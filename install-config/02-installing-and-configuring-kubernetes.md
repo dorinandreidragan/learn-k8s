@@ -95,18 +95,103 @@ Required Packages
 
 ### Installing Kubernetes on Ubuntu VMs
 
+#### Lab Environment
+
+#### Bootstrapping a Cluster with kubeadm
+
+- `kubeadm init`
+- Pre-flight checks
+- Creates a Certificate Authority
+- Generates kubeconfig files
+- Generates Static Pod Manifests
+- Wait for the Control Plane Pods to Start
+- Taints the Control Plane Node
+- Generates Bootstrap Token
+- Starts Add-On components: DNS and kube-proxy
+
+#### Understanding the Certificate Authority's Role in Your Cluster
+
+Certificate Authority
+
+- Self signed Certificate Authority (CA)
+- Can be part of an external PKI
+- Securing cluster communications
+  - API Server
+- Authentication of users and cluster components
+  `/etc/kubernetes/pki`
+- Distributed to each Node
+
+https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init
+
+#### kubeadm Created kubeconfig Files
+
+Used to define how to connect to your Cluster
+
+- Client certificates
+- Cluster API Server network location
+
 ```bash
-sudo apt-get install -y containerd
-
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-
-cat <<EOF >/etc/apt/sources.list.d/kubernetes.lis
-deb https://apt.kubernetes.io/ kubernetes-xenial main
-EOF
-
-apt-get update
-apt-get install -y kubelet kubeadm kubectl
-apt-mark hold kubelet kubeadm kubectl containerd
+/etc/kubernets
+  admin.conf (kubernetes-admin)
+  kubelet.conf
+  controller-manager.conf
+  scheduler.conf
 ```
 
-### Lab Environment
+#### Static Pod Manifests
+
+Manifest describe a configuration
+
+`/etc/kubernetes/manifests`
+
+- etcd
+- API Server
+- Controller Manager
+- Scheduler
+
+Watched by the kubelet started automatically when the system starts and over time
+
+#### Pod Networking Fundamentals
+
+Overlay networking
+
+- Flannel - Layer 3 virtual network
+- Calico - L3 and policy based traffic management
+- Weave Net - multi-host network
+
+https://kubernetes.io/docs/concepts/cluster-administration/networking/
+
+#### Creating a Cluster Control Plane Node
+
+```bash
+wget https://docs.projectcalico.org/manifests/calico.yaml
+
+kubeadm config print init-defaults | tee ClusterConfiguration.yaml
+
+sudo kubeadm init \
+  -- config=ClusterConfiguration.yaml \
+  -- cri-socket /run/containerd/containerd.sock \
+
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+kubectl apply -f calico.yaml
+```
+
+#### Adding a Node to a Cluster
+
+- Install Packages
+- `kubeadm join`
+- Download Cluster Information
+- Node submits a CSR
+- CA Signs the CSR automatically
+- Configures `kubelet.conf`
+
+```bash
+# use control plane ip
+kubeadm join 192.168.1.10 \
+  --token {k8s-token} \
+  --discovery-token-ca-cert-hash \
+  sha256:{hash}
+```
