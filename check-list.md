@@ -86,4 +86,12 @@ sudo sysctl --system
 
 <https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#installing-runtime>
 
+- [x] Install Docker container runtime
+  <https://docs.docker.com/engine/install/ubuntu/#installation-methods>
+
 ## Installing kubeadm, kubelet and kubectl
+
+<https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#installing-kubeadm-kubelet-and-kubectl>
+
+- [ ] `kubectl` <https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/>
+- 

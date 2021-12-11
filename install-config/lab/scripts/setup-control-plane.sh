@@ -1,13 +1,15 @@
 #!/bin/bash
 
-echo "Disable swap"
-sudo swapoff -a
+source "`dirname "$0"`/config.conf"
 
-echo "letting iptables see bridged traffic"
-source "`dirname "$0"`/config-br-netfilter.sh"
+# echo "Disable swap"
+# sudo swapoff -a
 
-echo "set iptables"
-source "`dirname "$0"`/config-control-plane-ports.sh"
+# echo "letting iptables see bridged traffic"
+# source "`dirname "$0"`/config-br-netfilter.sh"
 
-echo "install container runtime Docker"
-source "`dirname "$0"`/install-container-runtime-docker.sh" $DOCKER_VERSION
+# echo "set iptables"
+# source "`dirname "$0"`/config-control-plane-ports.sh"
+
+# echo "install container runtime Docker"
+# source "`dirname "$0"`/install-container-runtime-docker.sh" $DOCKER_VERSION
