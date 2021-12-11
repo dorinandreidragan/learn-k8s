@@ -1,8 +1,3 @@
-#!/bin/bash
-
-# Disable swap
-sudo swapoff -a
-
 # Letting iptables see bridged traffic
 
 # Make sure the br_netfilter module is loaded
