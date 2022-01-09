@@ -16,8 +16,9 @@ sudo iptables -A INPUT -p tcp --match multiport --dport 30000:32767 -j ACCEPT
 # UDP           I/O             7946            MetalLB                 All
 
 sudo iptables -A INPUT -p tcp --dport 7946 -j ACCEPT
-sudo iptables -A OUTPUT -p tcp --dport 7946 -j ACCEPT
 sudo iptables -A INPUT -p udp --dport 7946 -j ACCEPT
+
+sudo iptables -A OUTPUT -p tcp --dport 7946 -j ACCEPT
 sudo iptables -A OUTPUT -p udp --dport 7946 -j ACCEPT
 
 source "`dirname "$0"`/save-iptables.sh"

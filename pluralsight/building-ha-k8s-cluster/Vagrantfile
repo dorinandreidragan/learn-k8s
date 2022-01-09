@@ -1,0 +1,45 @@
+VAGRANTFILE_API_VERSION = "2"
+
+cluster = {
+  "haproxy" => { :ip => "192.168.1.11", :cpus => 1, :memory => 1024 },
+
+  "master1" => { :ip => "192.168.1.21", :cpus => 1, :memory => 2048 },
+  "master2" => { :ip => "192.168.1.22", :cpus => 1, :memory => 2048 },
+  "master3" => { :ip => "192.168.1.23", :cpus => 1, :memory => 2048 },
+  
+  "worker1" => { :ip => "192.168.1.31", :cpus => 1, :memory => 1024 },
+  "worker2" => { :ip => "192.168.1.32", :cpus => 1, :memory => 1024 },
+  "worker3" => { :ip => "192.168.1.33", :cpus => 1, :memory => 1024 },
+
+  "etcd1" => { :ip => "192.168.1.41", :cpus => 1, :memory => 1024 },
+  "etcd2" => { :ip => "192.168.1.42", :cpus => 1, :memory => 1024 },
+  "etcd3" => { :ip => "192.168.1.43", :cpus => 1, :memory => 1024 },
+}
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.provision "shell", inline: <<-SHELL
+    sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
+	echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
+	systemctl reload sshd
+	echo -e "admin\nadmin" | passwd root >/dev/null 2>&1
+  SHELL
+
+  cluster.each_with_index do |(hostname, info), index|
+    config.vm.define hostname do |cfg|
+      cfg.vm.box = "bento/ubuntu-20.04"
+      cfg.vm.hostname = hostname
+      config.vm.provision "shell" do |s|
+        ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
+        s.inline = <<-SHELL
+        echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+        SHELL
+      end
+      cfg.vm.network :private_network, ip: info[:ip]
+      cfg.vm.provider :virtualbox do |vb|
+        vb.name = hostname
+        vb.cpus = info[:cpus]
+        vb.memory = info[:memory]
+      end # end of vb
+    end # end cfg
+  end # end cluster
+end

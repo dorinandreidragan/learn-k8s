@@ -32,7 +32,7 @@
 
 <https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#letting-iptables-see-bridged-traffic>
 
-- [x] Make sure that the br_netfilter module is loaded. This can be done by running lsmod | grep br_netfilter. To load it explicitly call sudo modprobe br_netfilter.
+- [x] Make sure that the `br_netfilter` module is loaded. This can be done by running `lsmod | grep br_netfilter`. To load it explicitly call sudo modprobe br_netfilter.
 
 - [x] As a requirement for your Linux Node's iptables to correctly see bridged traffic, you should ensure net.bridge.bridge-nf-call-iptables is set to 1 in your sysctl config, e.g.
 
@@ -86,4 +86,30 @@ sudo sysctl --system
 
 <https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#installing-runtime>
 
+- [ ] Install Docker
+
 ## Installing kubeadm, kubelet and kubectl
+
+<https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#installing-kubeadm-kubelet-and-kubectl>
+
+- [ ] kubeadm
+- [ ] kubelet
+- [ ] kubectl
+
+## Configuring a cgroup driver
+
+<https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#configuring-a-cgroup-driver>
+
+- [ ] Configure Docker `cgroup` driver to `systemd`
+
+  ```bash
+  # Set the cgroup driver to systemd
+  sudo bash -c 'cat << EOF > /etc/docker/daemon.json
+  {
+    "exec-opts": ["native.cgroupdriver=systemd"]
+  }
+  EOF'
+  sudo systemctl restart docker
+  ```
+
+- [ ] Configure Kubernetes `cgroup` driver to `systemd`

@@ -14,7 +14,7 @@ sudo apt-get install -y \
     lsb-release
 
 # Add Docker's official GPG key:
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --yes --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
 # Set up the stable repository
 echo \
@@ -26,5 +26,13 @@ echo \
 sudo apt-get update
 sudo apt-get install -y docker-ce=$DOCKER_VERSION docker-ce-cli=$DOCKER_VERSION containerd.io
 
+# Set the cgroup driver to systemd
+sudo bash -c 'cat << EOF > /etc/docker/daemon.json
+{
+  "exec-opts": ["native.cgroupdriver=systemd"]
+}
+EOF'
+sudo systemctl restart docker
+
 # Verify that Docker Engine is installed correctly by running the hello-world image
-sudo docker run hello-world
+# sudo docker run hello-world
