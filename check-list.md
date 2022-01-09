@@ -86,7 +86,8 @@ sudo sysctl --system
 
 <https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#installing-runtime>
 
-- [ ] Install Docker
+- [x] Install Docker container runtime
+  <https://docs.docker.com/engine/install/ubuntu/#installation-methods>
 
 ## Installing kubeadm, kubelet and kubectl
 
@@ -113,3 +114,4 @@ sudo sysctl --system
   ```
 
 - [ ] Configure Kubernetes `cgroup` driver to `systemd`
+- [ ] `kubectl` <https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/>
